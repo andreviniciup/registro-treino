@@ -198,14 +198,8 @@ function playNotification() {
     audio.play();
 }
 
-// Adicionar event listeners
+// Adicionar event listeners apenas para os botões
 document.getElementById('startTimer').addEventListener('click', startTimer);
 document.getElementById('completarPreparacao').addEventListener('click', salvarDadosExercicio);
-
-// Salvar dados quando os campos forem alterados
-document.getElementById('pesoPreparacao').addEventListener('change', salvarDadosExercicio);
-document.getElementById('repeticoesPreparacao').addEventListener('change', salvarDadosExercicio);
-document.getElementById('pesoSerie0').addEventListener('change', salvarDadosExercicio);
-document.getElementById('repeticoesSerie0').addEventListener('change', salvarDadosExercicio);
 </script>
 {% endblock %} 
