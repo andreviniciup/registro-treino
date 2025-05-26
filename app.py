@@ -46,6 +46,10 @@ class SessaoTreino(db.Model):
     treino_id = db.Column(db.Integer, db.ForeignKey('treino.id'), nullable=False)
     observacoes = db.Column(db.Text)
 
+# Criar as tabelas
+with app.app_context():
+    db.create_all()
+
 # Rotas
 @app.route('/')
 def home():
@@ -127,6 +131,4 @@ def finalizar_treino(treino_id):
     return jsonify({'success': True})
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
     app.run(debug=True) 
