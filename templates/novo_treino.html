@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}Novo Treino - Registro de Treino{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1>Novo Treino</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" id="treinoForm">
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Nome do Treino</label>
+                        <input type="text" class="form-control" id="nome" name="nome" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="categoria" class="form-label">Categoria</label>
+                        <select class="form-select" id="categoria" name="categoria" required>
+                            <option value="">Selecione uma categoria</option>
+                            <option value="Aquecimento">Aquecimento</option>
+                            <option value="Pernas">Pernas</option>
+                            <option value="Peito">Peito</option>
+                            <option value="Costas">Costas</option>
+                            <option value="Ombros">Ombros</option>
+                            <option value="Bíceps">Bíceps</option>
+                            <option value="Tríceps">Tríceps</option>
+                            <option value="Abdômen">Abdômen</option>
+                            <option value="Cardio">Cardio</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Exercícios</label>
+                        <div id="exerciciosContainer">
+                            <!-- Os exercícios serão adicionados aqui dinamicamente -->
+                        </div>
+                        <button type="button" class="btn btn-outline-primary mt-2" onclick="adicionarExercicio()">
+                            <i class="bi bi-plus-lg"></i> Adicionar Exercício
+                        </button>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Criar Treino</button>
+                        <a href="{{ url_for('home') }}" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Dicas</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <i class="bi bi-info-circle"></i>
+                        Escolha um nome descritivo para seu treino
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-info-circle"></i>
+                        Selecione a categoria correta para melhor organização
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-info-circle"></i>
+                        Adicione exercícios na ordem que serão executados
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let exercicioCount = 0;
+
+function adicionarExercicio() {
+    const container = document.getElementById('exerciciosContainer');
+    const exercicioDiv = document.createElement('div');
+    exercicioDiv.className = 'card mb-3';
+    exercicioDiv.innerHTML = `
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="mb-0">Exercício ${exercicioCount + 1}</h6>
+                <button type="button" class="btn btn-outline-danger btn-sm" onclick="removerExercicio(this)">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Nome do Exercício</label>
+                    <input type="text" class="form-control" name="exercicios[${exercicioCount}][nome]" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Categoria Muscular</label>
+                    <select class="form-select" name="exercicios[${exercicioCount}][categoria_muscular]" required>
+                        <option value="">Selecione</option>
+                        <option value="Peito">Peito</option>
+                        <option value="Costas">Costas</option>
+                        <option value="Ombros">Ombros</option>
+                        <option value="Bíceps">Bíceps</option>
+                        <option value="Tríceps">Tríceps</option>
+                        <option value="Pernas">Pernas</option>
+                        <option value="Abdômen">Abdômen</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Séries de Preparação</label>
+                    <input type="number" class="form-control" name="exercicios[${exercicioCount}][series_preparacao]" value="1" min="0">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Peso Preparação (kg)</label>
+                    <input type="number" class="form-control" name="exercicios[${exercicioCount}][peso_preparacao]" value="0" min="0" step="0.5">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Tempo Descanso (s)</label>
+                    <input type="number" class="form-control" name="exercicios[${exercicioCount}][tempo_descanso]" value="60" min="0">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Séries Eficazes</label>
+                    <input type="number" class="form-control" name="exercicios[${exercicioCount}][series_eficazes]" value="3" min="1">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Repetições</label>
+                    <input type="number" class="form-control" name="exercicios[${exercicioCount}][repeticoes_eficazes]" value="12" min="1">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Peso (kg)</label>
+                    <input type="number" class="form-control" name="exercicios[${exercicioCount}][peso_eficazes]" value="0" min="0" step="0.5">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Instruções</label>
+                <textarea class="form-control" name="exercicios[${exercicioCount}][instrucoes]" rows="2"></textarea>
+            </div>
+        </div>
+    `;
+    container.appendChild(exercicioDiv);
+    exercicioCount++;
+}
+
+function removerExercicio(button) {
+    button.closest('.card').remove();
+}
+
+// Adicionar um exercício automaticamente quando a página carregar
+document.addEventListener('DOMContentLoaded', function() {
+    adicionarExercicio();
+});
+</script>
+{% endblock %} 

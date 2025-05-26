@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}{{ exercicio.nome }} - Registro de Treino{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1>{{ exercicio.nome }}</h1>
+        <p class="text-muted">{{ exercicio.categoria_muscular }}</p>
+    </div>
+    <div class="col text-end">
+        <button class="btn btn-outline-primary" id="favoritar">
+            <i class="bi bi-heart"></i>
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <!-- Séries de Preparação -->
+        <div class="card mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Séries de Preparação</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Peso (kg)</label>
+                            <input type="number" class="form-control" value="{{ exercicio.peso_preparacao }}" id="pesoPreparacao">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Repetições</label>
+                            <input type="number" class="form-control" value="{{ exercicio.series_preparacao }}" id="repeticoesPreparacao">
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary mt-3" id="completarPreparacao">
+                    Completar Série de Preparação
+                </button>
+            </div>
+        </div>
+
+        <!-- Séries Eficazes -->
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Séries Eficazes</h5>
+            </div>
+            <div class="card-body">
+                <div id="seriesContainer">
+                    {% for i in range(exercicio.series_eficazes) %}
+                    <div class="serie-item mb-3 p-3 border rounded">
+                        <h6>Série {{ i + 1 }}</h6>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Peso (kg)</label>
+                                    <input type="number" class="form-control" value="{{ exercicio.peso_eficazes }}" id="pesoSerie{{ i }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Repetições</label>
+                                    <input type="number" class="form-control" value="{{ exercicio.repeticoes_eficazes }}" id="repeticoesSerie{{ i }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success mt-4" onclick="completarSerie({{ i }})">
+                                    Completar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Timer de Descanso -->
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Timer de Descanso</h5>
+            </div>
+            <div class="card-body text-center">
+                <div class="timer-display mb-3" id="timerDisplay">
+                    {{ exercicio.tempo_descanso }}
+                </div>
+                <div class="btn-group mb-3">
+                    <button class="btn btn-outline-secondary" onclick="ajustarTempo(-15)">-15s</button>
+                    <button class="btn btn-primary" id="startTimer">Iniciar</button>
+                    <button class="btn btn-outline-secondary" onclick="ajustarTempo(15)">+15s</button>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" id="timerProgress" role="progressbar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instruções -->
+        <div class="card mt-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Instruções</h5>
+            </div>
+            <div class="card-body">
+                <p>{{ exercicio.instrucoes }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let timerInterval;
+let timeLeft = {{ exercicio.tempo_descanso }};
+let isTimerRunning = false;
+
+function startTimer() {
+    if (isTimerRunning) {
+        clearInterval(timerInterval);
+        document.getElementById('startTimer').textContent = 'Iniciar';
+        isTimerRunning = false;
+        return;
+    }
+
+    isTimerRunning = true;
+    document.getElementById('startTimer').textContent = 'Pausar';
+    
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            document.getElementById('startTimer').textContent = 'Iniciar';
+            playNotification();
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const display = document.getElementById('timerDisplay');
+    const progress = document.getElementById('timerProgress');
+    const totalTime = {{ exercicio.tempo_descanso }};
+    
+    display.textContent = timeLeft;
+    const percentage = (timeLeft / totalTime) * 100;
+    progress.style.width = percentage + '%';
+}
+
+function ajustarTempo(segundos) {
+    timeLeft = Math.max(0, timeLeft + segundos);
+    updateTimerDisplay();
+}
+
+function completarSerie(numeroSerie) {
+    const serie = document.querySelector(`#seriesContainer > div:nth-child(${numeroSerie + 1})`);
+    serie.classList.add('bg-success', 'bg-opacity-10');
+}
+
+function playNotification() {
+    const audio = new Audio('/static/notification.mp3');
+    audio.play();
+}
+
+document.getElementById('startTimer').addEventListener('click', startTimer);
+</script>
+{% endblock %} 
