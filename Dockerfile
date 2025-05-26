@@ -9,7 +9,8 @@ COPY . .
 
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
+ENV PORT=8080
 
-EXPOSE 8080
+EXPOSE $PORT
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "app:app"] 
+CMD gunicorn --bind 0.0.0.0:$PORT app:app 
