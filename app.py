@@ -136,6 +136,30 @@ def finalizar_treino(treino_id):
     db.session.commit()
     return jsonify({'success': True})
 
+@app.route('/exercicio/<int:exercicio_id>/atualizar', methods=['POST'])
+def atualizar_exercicio(exercicio_id):
+    try:
+        exercicio = Exercicio.query.get_or_404(exercicio_id)
+        data = request.get_json()
+        
+        # Atualizar séries de preparação
+        if 'peso_preparacao' in data:
+            exercicio.peso_preparacao = float(data['peso_preparacao'])
+        if 'series_preparacao' in data:
+            exercicio.series_preparacao = int(data['series_preparacao'])
+            
+        # Atualizar séries eficazes
+        if 'peso_eficazes' in data:
+            exercicio.peso_eficazes = float(data['peso_eficazes'])
+        if 'repeticoes_eficazes' in data:
+            exercicio.repeticoes_eficazes = int(data['repeticoes_eficazes'])
+            
+        db.session.commit()
+        return jsonify({'success': True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)}), 400
+
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 8080))
     app.run(host='0.0.0.0', port=port) 
