@@ -110,6 +110,44 @@ class ParticipanteDesafio(db.Model):
 # Criar as tabelas
 with app.app_context():
     db.create_all()
+    
+    # Executar migração se necessário
+    try:
+        from sqlalchemy import text
+        
+        # Verificar se a coluna usuario_id existe na tabela treino
+        result = db.session.execute(text("""
+            SELECT column_name 
+            FROM information_schema.columns 
+            WHERE table_name = 'treino' AND column_name = 'usuario_id'
+        """))
+        
+        if not result.fetchone():
+            print("Executando migração do banco de dados...")
+            
+            # Adicionar coluna usuario_id
+            db.session.execute(text("ALTER TABLE treino ADD COLUMN usuario_id INTEGER"))
+            
+            # Criar usuário padrão
+            db.session.execute(text("""
+                INSERT INTO usuario (nome, email, senha_hash, data_cadastro) 
+                VALUES ('Usuário Padrão', 'default@example.com', 'default_hash', NOW())
+                ON CONFLICT (email) DO NOTHING
+            """))
+            
+            # Pegar ID do usuário padrão
+            result = db.session.execute(text("SELECT id FROM usuario WHERE email = 'default@example.com'"))
+            user_id = result.fetchone()[0]
+            
+            # Atualizar treinos existentes
+            db.session.execute(text(f"UPDATE treino SET usuario_id = {user_id} WHERE usuario_id IS NULL"))
+            
+            db.session.commit()
+            print("Migração concluída!")
+            
+    except Exception as e:
+        print(f"Erro na migração: {str(e)}")
+        db.session.rollback()
 
 # Rotas
 @app.route('/')
