@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Novo Desafio - FitGoals{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1>Novo Desafio</h1>
+        <p class="text-muted">Crie um desafio e motive outros usuários</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="titulo" class="form-label">Título do Desafio</label>
+                        <input type="text" class="form-control" id="titulo" name="titulo" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="descricao" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="descricao" name="descricao" rows="3" placeholder="Descreva o desafio e suas regras..."></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="tipo" class="form-label">Tipo de Desafio</label>
+                                <select class="form-select" id="tipo" name="tipo" required>
+                                    <option value="">Selecione o tipo</option>
+                                    <option value="treinos">Treinos por semana</option>
+                                    <option value="peso">Peso (kg)</option>
+                                    <option value="cardio">Minutos de cardio</option>
+                                    <option value="flexoes">Flexões por dia</option>
+                                    <option value="abdominais">Abdominais por dia</option>
+                                    <option value="agachamentos">Agachamentos por dia</option>
+                                    <option value="corrida">Quilômetros de corrida</option>
+                                    <option value="outro">Outro</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="valor_objetivo" class="form-label">Valor Objetivo</label>
+                                <input type="number" class="form-control" id="valor_objetivo" name="valor_objetivo" step="0.1" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="data_fim" class="form-label">Data de Término</label>
+                        <input type="date" class="form-control" id="data_fim" name="data_fim" required>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Criar Desafio</button>
+                        <a href="{{ url_for('desafios') }}" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Dicas para Desafios</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <i class="bi bi-lightbulb"></i>
+                        Seja claro nas regras
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-lightbulb"></i>
+                        Defina objetivos realistas
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-lightbulb"></i>
+                        Motive os participantes
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-lightbulb"></i>
+                        Mantenha o desafio ativo
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Exemplos de Desafios</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <strong>30 dias de flexões</strong><br>
+                        <small class="text-muted">50 flexões por dia</small>
+                    </li>
+                    <li class="mb-2">
+                        <strong>Desafio cardio</strong><br>
+                        <small class="text-muted">30 minutos por dia</small>
+                    </li>
+                    <li class="mb-2">
+                        <strong>Treino consistente</strong><br>
+                        <small class="text-muted">4 treinos por semana</small>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

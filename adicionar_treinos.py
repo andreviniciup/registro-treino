@@ -8,16 +8,20 @@ load_dotenv()
 def adicionar_treinos():
     with app.app_context():
         try:
-            # Limpar treinos existentes
+            print("Conectando ao banco de dados...")
+            
+            # Limpa os treinos existentes
+            print("Removendo treinos antigos...")
             Exercicio.query.delete()
             Treino.query.delete()
             db.session.commit()
             print("Treinos antigos removidos com sucesso!")
 
-            # Treino A - Pernas (ênfase anterior e glúteo)
+            # Treino A - Peito e Tríceps
+            print("Adicionando Treino A...")
             treino_a = Treino(
-                nome="Treino A - Pernas (ênfase anterior e glúteo)",
-                categoria="Pernas",
+                nome="Treino A - Peito e Tríceps",
+                categoria="Superior",
                 status="ativo"
             )
             db.session.add(treino_a)
@@ -25,71 +29,73 @@ def adicionar_treinos():
 
             exercicios_a = [
                 Exercicio(
-                    nome="Hack Machine",
-                    categoria_muscular="Pernas",
-                    instrucoes="2 séries preparatórias\n1 série de trabalho (rest-pause: faz até falhar, 15s de descanso, repete 2x)\nCarga: Progressão semanal, começando com carga que permita 8-10 reps",
+                    nome="Supino Reto",
+                    categoria_muscular="Peito",
                     series_preparacao=2,
-                    peso_preparacao=0,
-                    series_eficazes=1,
-                    repeticoes_eficazes=10,
-                    peso_eficazes=0,
-                    tempo_descanso=90,
-                    treino_id=treino_a.id
-                ),
-                Exercicio(
-                    nome="Leg Press",
-                    categoria_muscular="Pernas",
-                    instrucoes="1 preparatória\n2 séries de trabalho (última com drop-set: tira 20% do peso e continua até falha)",
-                    series_preparacao=1,
-                    peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=10,
-                    peso_eficazes=0,
-                    tempo_descanso=90,
-                    treino_id=treino_a.id
-                ),
-                Exercicio(
-                    nome="Cadeira Extensora",
-                    categoria_muscular="Pernas",
-                    instrucoes="2 séries de trabalho (reps altas: 12-15)\nÚltima série: isometria de 15 segundos na contração máxima após a falha",
-                    series_preparacao=0,
-                    peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=15,
-                    peso_eficazes=0,
-                    tempo_descanso=90,
-                    treino_id=treino_a.id
-                ),
-                Exercicio(
-                    nome="Cadeira Adutora",
-                    categoria_muscular="Pernas",
-                    instrucoes="1 série de aquecimento\n2 séries de trabalho (12-15 reps)",
-                    series_preparacao=1,
-                    peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=15,
-                    peso_eficazes=0,
-                    tempo_descanso=90,
-                    treino_id=treino_a.id
-                ),
-                Exercicio(
-                    nome="Elevação de pernas",
-                    categoria_muscular="Abdômen",
-                    instrucoes="3 séries até a falha",
-                    series_preparacao=0,
-                    peso_preparacao=0,
+                    peso_preparacao=20,
                     series_eficazes=3,
-                    repeticoes_eficazes=0,
-                    peso_eficazes=0,
+                    repeticoes_eficazes=12,
+                    peso_eficazes=30,
+                    tempo_descanso=90,
+                    instrucoes="Foco em amplitude completa e controle do movimento",
+                    treino_id=treino_a.id
+                ),
+                Exercicio(
+                    nome="Supino Inclinado",
+                    categoria_muscular="Peito",
+                    series_preparacao=2,
+                    peso_preparacao=15,
+                    series_eficazes=3,
+                    repeticoes_eficazes=12,
+                    peso_eficazes=25,
+                    tempo_descanso=90,
+                    instrucoes="Ênfase na parte superior do peito",
+                    treino_id=treino_a.id
+                ),
+                Exercicio(
+                    nome="Crossover",
+                    categoria_muscular="Peito",
+                    series_preparacao=2,
+                    peso_preparacao=10,
+                    series_eficazes=3,
+                    repeticoes_eficazes=15,
+                    peso_eficazes=15,
                     tempo_descanso=60,
+                    instrucoes="Movimento controlado e constante",
+                    treino_id=treino_a.id
+                ),
+                Exercicio(
+                    nome="Tríceps Pulley",
+                    categoria_muscular="Tríceps",
+                    series_preparacao=2,
+                    peso_preparacao=15,
+                    series_eficazes=3,
+                    repeticoes_eficazes=15,
+                    peso_eficazes=20,
+                    tempo_descanso=60,
+                    instrucoes="Cotovelos fixos, movimento apenas do antebraço",
+                    treino_id=treino_a.id
+                ),
+                Exercicio(
+                    nome="Tríceps Francês",
+                    categoria_muscular="Tríceps",
+                    series_preparacao=2,
+                    peso_preparacao=10,
+                    series_eficazes=3,
+                    repeticoes_eficazes=12,
+                    peso_eficazes=15,
+                    tempo_descanso=60,
+                    instrucoes="Manter os cotovelos próximos à cabeça",
                     treino_id=treino_a.id
                 )
             ]
+            db.session.add_all(exercicios_a)
 
-            # Treino B - Peito e Bíceps
+            # Treino B - Costas e Bíceps
+            print("Adicionando Treino B...")
             treino_b = Treino(
-                nome="Treino B - Peito e Bíceps",
-                categoria="Peito",
+                nome="Treino B - Costas e Bíceps",
+                categoria="Superior",
                 status="ativo"
             )
             db.session.add(treino_b)
@@ -97,71 +103,61 @@ def adicionar_treinos():
 
             exercicios_b = [
                 Exercicio(
-                    nome="Supino Inclinado",
-                    categoria_muscular="Peito",
-                    instrucoes="2 séries preparatórias\n2 séries de trabalho (rest-pause)",
+                    nome="Puxada Frontal",
+                    categoria_muscular="Costas",
                     series_preparacao=2,
-                    peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=10,
-                    peso_eficazes=0,
-                    tempo_descanso=90,
-                    treino_id=treino_b.id
-                ),
-                Exercicio(
-                    nome="Crucifixo máquina",
-                    categoria_muscular="Peito",
-                    instrucoes="1 série preparatória\n2 séries de trabalho (12-15 reps, foco em alongamento)",
-                    series_preparacao=1,
-                    peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=15,
-                    peso_eficazes=0,
-                    tempo_descanso=90,
-                    treino_id=treino_b.id
-                ),
-                Exercicio(
-                    nome="Paralela na máquina ou Supino Declinado",
-                    categoria_muscular="Peito",
-                    instrucoes="2 séries de trabalho (8-10 reps)",
-                    series_preparacao=0,
-                    peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=10,
-                    peso_eficazes=0,
-                    tempo_descanso=90,
-                    treino_id=treino_b.id
-                ),
-                Exercicio(
-                    nome="Rosca Banco Inclinado",
-                    categoria_muscular="Bíceps",
-                    instrucoes="1 série preparatória\n2 séries de trabalho (10-12 reps, lenta e controlada)",
-                    series_preparacao=1,
-                    peso_preparacao=0,
-                    series_eficazes=2,
+                    peso_preparacao=30,
+                    series_eficazes=3,
                     repeticoes_eficazes=12,
-                    peso_eficazes=0,
+                    peso_eficazes=45,
                     tempo_descanso=90,
+                    instrucoes="Puxar a barra até o peito, mantendo as costas retas",
                     treino_id=treino_b.id
                 ),
                 Exercicio(
-                    nome="Rosca Scott máquina",
-                    categoria_muscular="Bíceps",
-                    instrucoes="2 séries de trabalho (12 reps, última com drop-set)",
-                    series_preparacao=0,
-                    peso_preparacao=0,
-                    series_eficazes=2,
+                    nome="Remada Baixa",
+                    categoria_muscular="Costas",
+                    series_preparacao=2,
+                    peso_preparacao=25,
+                    series_eficazes=3,
                     repeticoes_eficazes=12,
-                    peso_eficazes=0,
+                    peso_eficazes=40,
                     tempo_descanso=90,
+                    instrucoes="Puxar o peso até a cintura, mantendo as costas retas",
+                    treino_id=treino_b.id
+                ),
+                Exercicio(
+                    nome="Rosca Direta",
+                    categoria_muscular="Bíceps",
+                    series_preparacao=2,
+                    peso_preparacao=10,
+                    series_eficazes=3,
+                    repeticoes_eficazes=12,
+                    peso_eficazes=15,
+                    tempo_descanso=60,
+                    instrucoes="Manter os cotovelos fixos, movimento controlado",
+                    treino_id=treino_b.id
+                ),
+                Exercicio(
+                    nome="Rosca Martelo",
+                    categoria_muscular="Bíceps",
+                    series_preparacao=2,
+                    peso_preparacao=8,
+                    series_eficazes=3,
+                    repeticoes_eficazes=12,
+                    peso_eficazes=12,
+                    tempo_descanso=60,
+                    instrucoes="Manter os pulsos neutros durante todo o movimento",
                     treino_id=treino_b.id
                 )
             ]
+            db.session.add_all(exercicios_b)
 
-            # Treino C - Costas, Ombro, Tríceps
+            # Treino C - Pernas
+            print("Adicionando Treino C...")
             treino_c = Treino(
-                nome="Treino C - Costas, Ombro, Tríceps",
-                categoria="Costas",
+                nome="Treino C - Pernas",
+                categoria="Inferior",
                 status="ativo"
             )
             db.session.add(treino_c)
@@ -169,119 +165,61 @@ def adicionar_treinos():
 
             exercicios_c = [
                 Exercicio(
-                    nome="Puxada Supinada",
-                    categoria_muscular="Costas",
-                    instrucoes="1 série preparatória\n2 séries de trabalho (rest-pause)",
-                    series_preparacao=1,
-                    peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=10,
-                    peso_eficazes=0,
-                    tempo_descanso=90,
-                    treino_id=treino_c.id
-                ),
-                Exercicio(
-                    nome="Puxada Articulada máquina",
-                    categoria_muscular="Costas",
-                    instrucoes="2 séries de trabalho (10-12 reps)",
-                    series_preparacao=0,
-                    peso_preparacao=0,
-                    series_eficazes=2,
+                    nome="Leg Press",
+                    categoria_muscular="Quadríceps",
+                    series_preparacao=2,
+                    peso_preparacao=40,
+                    series_eficazes=3,
                     repeticoes_eficazes=12,
-                    peso_eficazes=0,
-                    tempo_descanso=90,
+                    peso_eficazes=60,
+                    tempo_descanso=120,
+                    instrucoes="Ajustar o banco para manter os joelhos alinhados com os pés",
                     treino_id=treino_c.id
                 ),
                 Exercicio(
-                    nome="Remada Aberta máquina",
-                    categoria_muscular="Costas",
-                    instrucoes="2 séries de trabalho (12 reps, última com drop-set)",
-                    series_preparacao=0,
-                    peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=12,
-                    peso_eficazes=0,
+                    nome="Cadeira Extensora",
+                    categoria_muscular="Quadríceps",
+                    series_preparacao=2,
+                    peso_preparacao=20,
+                    series_eficazes=3,
+                    repeticoes_eficazes=15,
+                    peso_eficazes=30,
                     tempo_descanso=90,
+                    instrucoes="Movimento completo, focando na contração máxima",
                     treino_id=treino_c.id
                 ),
                 Exercicio(
-                    nome="Desenvolvimento Ombro máquina",
-                    categoria_muscular="Ombros",
-                    instrucoes="1 série preparatória\n2 séries de trabalho (10 reps)",
-                    series_preparacao=1,
-                    peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=10,
-                    peso_eficazes=0,
+                    nome="Cadeira Flexora",
+                    categoria_muscular="Posterior",
+                    series_preparacao=2,
+                    peso_preparacao=20,
+                    series_eficazes=3,
+                    repeticoes_eficazes=15,
+                    peso_eficazes=30,
                     tempo_descanso=90,
+                    instrucoes="Manter o quadril apoiado no banco",
                     treino_id=treino_c.id
                 ),
                 Exercicio(
-                    nome="Elevação Lateral",
-                    categoria_muscular="Ombros",
-                    instrucoes="3 séries (15 reps, últimas 5 reps com técnica de cheating)",
-                    series_preparacao=0,
+                    nome="Elevação Pélvica",
+                    categoria_muscular="Glúteos",
+                    series_preparacao=2,
                     peso_preparacao=0,
                     series_eficazes=3,
                     repeticoes_eficazes=15,
                     peso_eficazes=0,
-                    tempo_descanso=90,
-                    treino_id=treino_c.id
-                ),
-                Exercicio(
-                    nome="Crucifixo Inverso",
-                    categoria_muscular="Ombros",
-                    instrucoes="1 série preparatória\n1 série de trabalho (máxima falha com isometria final)",
-                    series_preparacao=1,
-                    peso_preparacao=0,
-                    series_eficazes=1,
-                    repeticoes_eficazes=12,
-                    peso_eficazes=0,
-                    tempo_descanso=90,
-                    treino_id=treino_c.id
-                ),
-                Exercicio(
-                    nome="Tríceps Francês halter",
-                    categoria_muscular="Tríceps",
-                    instrucoes="2 séries de trabalho (10 reps)",
-                    series_preparacao=0,
-                    peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=10,
-                    peso_eficazes=0,
-                    tempo_descanso=90,
-                    treino_id=treino_c.id
-                ),
-                Exercicio(
-                    nome="Testa polia",
-                    categoria_muscular="Tríceps",
-                    instrucoes="1-2 séries de trabalho (12 reps)",
-                    series_preparacao=0,
-                    peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=12,
-                    peso_eficazes=0,
-                    tempo_descanso=90,
-                    treino_id=treino_c.id
-                ),
-                Exercicio(
-                    nome="Pulley",
-                    categoria_muscular="Tríceps",
-                    instrucoes="1 série de trabalho (máxima falha)",
-                    series_preparacao=0,
-                    peso_preparacao=0,
-                    series_eficazes=1,
-                    repeticoes_eficazes=12,
-                    peso_eficazes=0,
-                    tempo_descanso=90,
+                    tempo_descanso=60,
+                    instrucoes="Elevar o quadril até a altura dos ombros",
                     treino_id=treino_c.id
                 )
             ]
+            db.session.add_all(exercicios_c)
 
-            # Treino D - Pernas (ênfase posterior e glúteo)
+            # Treino D - Ombros e Trapézio
+            print("Adicionando Treino D...")
             treino_d = Treino(
-                nome="Treino D - Pernas (ênfase posterior e glúteo)",
-                categoria="Pernas",
+                nome="Treino D - Ombros e Trapézio",
+                categoria="Superior",
                 status="ativo"
             )
             db.session.add(treino_d)
@@ -289,71 +227,49 @@ def adicionar_treinos():
 
             exercicios_d = [
                 Exercicio(
-                    nome="Stiff",
-                    categoria_muscular="Pernas",
-                    instrucoes="2 séries preparatórias\n2 séries de trabalho (10-12 reps, foco no alongamento)",
+                    nome="Desenvolvimento com Halteres",
+                    categoria_muscular="Ombros",
                     series_preparacao=2,
-                    peso_preparacao=0,
-                    series_eficazes=2,
+                    peso_preparacao=8,
+                    series_eficazes=3,
                     repeticoes_eficazes=12,
-                    peso_eficazes=0,
+                    peso_eficazes=12,
                     tempo_descanso=90,
+                    instrucoes="Manter os cotovelos ligeiramente à frente do corpo",
                     treino_id=treino_d.id
                 ),
                 Exercicio(
-                    nome="Cadeira Flexora",
-                    categoria_muscular="Pernas",
-                    instrucoes="2 séries de trabalho (12-15 reps)",
-                    series_preparacao=0,
-                    peso_preparacao=0,
-                    series_eficazes=2,
+                    nome="Elevação Lateral",
+                    categoria_muscular="Ombros",
+                    series_preparacao=2,
+                    peso_preparacao=5,
+                    series_eficazes=3,
                     repeticoes_eficazes=15,
-                    peso_eficazes=0,
-                    tempo_descanso=90,
+                    peso_eficazes=8,
+                    tempo_descanso=60,
+                    instrucoes="Elevar os braços até a altura dos ombros",
                     treino_id=treino_d.id
                 ),
                 Exercicio(
-                    nome="Agachamento Smith",
-                    categoria_muscular="Pernas",
-                    instrucoes="1 série preparatória\n1 série de trabalho (6-8 reps pesada)\n1 série moderada (10 reps)",
-                    series_preparacao=1,
-                    peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=10,
-                    peso_eficazes=0,
-                    tempo_descanso=90,
-                    treino_id=treino_d.id
-                ),
-                Exercicio(
-                    nome="Cadeira Abdutora",
-                    categoria_muscular="Pernas",
-                    instrucoes="2 séries de trabalho (15 reps)",
-                    series_preparacao=0,
-                    peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=15,
-                    peso_eficazes=0,
-                    tempo_descanso=90,
-                    treino_id=treino_d.id
-                ),
-                Exercicio(
-                    nome="Búlgaro",
-                    categoria_muscular="Pernas",
-                    instrucoes="2 séries de trabalho (10 reps cada perna)",
-                    series_preparacao=0,
-                    peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=10,
-                    peso_eficazes=0,
-                    tempo_descanso=90,
+                    nome="Encolhimento com Halteres",
+                    categoria_muscular="Trapézio",
+                    series_preparacao=2,
+                    peso_preparacao=12,
+                    series_eficazes=3,
+                    repeticoes_eficazes=12,
+                    peso_eficazes=18,
+                    tempo_descanso=60,
+                    instrucoes="Elevar os ombros mantendo os braços estendidos",
                     treino_id=treino_d.id
                 )
             ]
+            db.session.add_all(exercicios_d)
 
-            # Treino E - Superiores Completo
+            # Treino E - Abdômen e Core
+            print("Adicionando Treino E...")
             treino_e = Treino(
-                nome="Treino E - Superiores Completo",
-                categoria="Superiores",
+                nome="Treino E - Abdômen e Core",
+                categoria="Core",
                 status="ativo"
             )
             db.session.add(treino_e)
@@ -361,108 +277,52 @@ def adicionar_treinos():
 
             exercicios_e = [
                 Exercicio(
-                    nome="Puxada Supinada",
-                    categoria_muscular="Costas",
-                    instrucoes="2 séries",
+                    nome="Abdominal Reto",
+                    categoria_muscular="Abdômen",
                     series_preparacao=0,
                     peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=12,
+                    series_eficazes=3,
+                    repeticoes_eficazes=20,
                     peso_eficazes=0,
-                    tempo_descanso=60,
+                    tempo_descanso=45,
+                    instrucoes="Manter a lombar apoiada no chão",
                     treino_id=treino_e.id
                 ),
                 Exercicio(
-                    nome="Supino Inclinado Máquina",
-                    categoria_muscular="Peito",
-                    instrucoes="2 séries",
+                    nome="Prancha",
+                    categoria_muscular="Core",
                     series_preparacao=0,
                     peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=12,
+                    series_eficazes=3,
+                    repeticoes_eficazes=1,
                     peso_eficazes=0,
                     tempo_descanso=60,
+                    instrucoes="Manter o corpo alinhado, segurar por 30 segundos",
                     treino_id=treino_e.id
                 ),
                 Exercicio(
-                    nome="Rosca Scott máquina",
-                    categoria_muscular="Bíceps",
-                    instrucoes="2 séries",
+                    nome="Abdominal Oblíquo",
+                    categoria_muscular="Abdômen",
                     series_preparacao=0,
                     peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=12,
+                    series_eficazes=3,
+                    repeticoes_eficazes=15,
                     peso_eficazes=0,
-                    tempo_descanso=60,
-                    treino_id=treino_e.id
-                ),
-                Exercicio(
-                    nome="Desenvolvimento Ombro",
-                    categoria_muscular="Ombros",
-                    instrucoes="2 séries",
-                    series_preparacao=0,
-                    peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=12,
-                    peso_eficazes=0,
-                    tempo_descanso=60,
-                    treino_id=treino_e.id
-                ),
-                Exercicio(
-                    nome="Tríceps Pulley",
-                    categoria_muscular="Tríceps",
-                    instrucoes="2 séries",
-                    series_preparacao=0,
-                    peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=12,
-                    peso_eficazes=0,
-                    tempo_descanso=60,
-                    treino_id=treino_e.id
-                ),
-                Exercicio(
-                    nome="Crucifixo Máquina",
-                    categoria_muscular="Peito",
-                    instrucoes="2 séries",
-                    series_preparacao=0,
-                    peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=12,
-                    peso_eficazes=0,
-                    tempo_descanso=60,
-                    treino_id=treino_e.id
-                ),
-                Exercicio(
-                    nome="Elevação Lateral",
-                    categoria_muscular="Ombros",
-                    instrucoes="2 séries",
-                    series_preparacao=0,
-                    peso_preparacao=0,
-                    series_eficazes=2,
-                    repeticoes_eficazes=12,
-                    peso_eficazes=0,
-                    tempo_descanso=60,
+                    tempo_descanso=45,
+                    instrucoes="Alternar os lados, mantendo o controle",
                     treino_id=treino_e.id
                 )
             ]
-
-            # Adicionar todos os exercícios
-            for exercicio in exercicios_a + exercicios_b + exercicios_c + exercicios_d + exercicios_e:
-                db.session.add(exercicio)
+            db.session.add_all(exercicios_e)
 
             # Commit das alterações
             db.session.commit()
             print("Treinos adicionados com sucesso!")
-            
+
         except Exception as e:
-            print(f"Erro ao adicionar treinos: {str(e)}")
             db.session.rollback()
+            print(f"Erro ao adicionar treinos: {str(e)}")
+            raise
 
 if __name__ == "__main__":
-    # Verifica se está usando PostgreSQL
-    if os.getenv('DATABASE_URL', '').startswith('postgresql://'):
-        print("Conectando ao banco de dados PostgreSQL...")
-    else:
-        print("Conectando ao banco de dados SQLite local...")
-    
     adicionar_treinos() 

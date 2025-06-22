@@ -160,6 +160,35 @@ function removerExercicio(button) {
 // Adicionar um exercício automaticamente quando a página carregar
 document.addEventListener('DOMContentLoaded', function() {
     adicionarExercicio();
+    
+    // Adicionar event listener para o formulário
+    const form = document.getElementById('treinoForm');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevenir o envio padrão
+        
+        // Log para debug
+        console.log('Formulário sendo enviado...');
+        
+        // Coletar todos os dados do formulário
+        const formData = new FormData(form);
+        console.log('Dados do formulário:', Object.fromEntries(formData));
+        
+        // Enviar o formulário via fetch
+        fetch('/novo_treino', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            console.log('Resposta recebida:', response);
+            if (response.redirected) {
+                window.location.href = response.url;
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao enviar formulário:', error);
+            alert('Erro ao salvar o treino. Por favor, tente novamente.');
+        });
+    });
 });
 </script>
 {% endblock %} 

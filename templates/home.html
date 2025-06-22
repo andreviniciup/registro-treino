@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Home - Registro de Treino{% endblock %}
+{% block title %}Início - FitGoals{% endblock %}
 
 {% block content %}
 <div class="row mb-4">
     <div class="col">
-        <h1>Meus Treinos</h1>
+        <h1>Bem-vindo, {{ usuario.nome }}!</h1>
+        <p class="text-muted">Acompanhe seus treinos, metas e desafios</p>
     </div>
     <div class="col text-end">
         <a href="{{ url_for('novo_treino') }}" class="btn btn-primary">
@@ -14,38 +15,151 @@
     </div>
 </div>
 
-<div class="row">
-    {% for treino in treinos %}
-    <div class="col-md-4 mb-4">
-        <div class="card treino-card">
+<!-- Metas Ativas -->
+<div class="row mb-4">
+    <div class="col">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-target"></i> Metas Ativas
+                </h5>
+                <a href="{{ url_for('metas') }}" class="btn btn-outline-primary btn-sm">Ver Todas</a>
+            </div>
             <div class="card-body">
-                <h5 class="card-title">{{ treino.nome }}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{ treino.categoria }}</h6>
-                <p class="card-text">
-                    <small class="text-muted">
-                        Criado em: {{ treino.data_criacao.strftime('%d/%m/%Y') }}
-                    </small>
-                </p>
-                <p class="card-text">
-                    <i class="bi bi-list-check"></i> {{ treino.exercicios|length }} exercícios
-                </p>
-                <div class="d-flex justify-content-between align-items-center">
-                    <span class="badge {% if treino.status == 'ativo' %}bg-success{% else %}bg-secondary{% endif %}">
-                        {{ treino.status }}
-                    </span>
-                    <a href="{{ url_for('treino', treino_id=treino.id) }}" class="btn btn-primary">
-                        Iniciar Treino
-                    </a>
-                </div>
+                {% if metas %}
+                    <div class="row">
+                        {% for meta in metas[:3] %}
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ meta.titulo }}</h6>
+                                    <p class="card-text text-muted">{{ meta.descricao[:50] }}...</p>
+                                    <div class="progress mb-2">
+                                        <div class="progress-bar" role="progressbar" 
+                                             style="width: {{ (meta.valor_atual / meta.valor_objetivo * 100) | round(1) }}%">
+                                            {{ (meta.valor_atual / meta.valor_objetivo * 100) | round(1) }}%
+                                        </div>
+                                    </div>
+                                    <small class="text-muted">
+                                        {{ meta.valor_atual }}/{{ meta.valor_objetivo }} {{ meta.tipo }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">Nenhuma meta ativa. <a href="{{ url_for('nova_meta') }}">Criar meta</a></p>
+                {% endif %}
             </div>
         </div>
     </div>
-    {% else %}
+</div>
+
+<!-- Desafios Ativos -->
+<div class="row mb-4">
     <div class="col">
-        <div class="alert alert-info">
-            Nenhum treino cadastrado ainda. Clique em "Novo Treino" para começar!
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-trophy"></i> Desafios Ativos
+                </h5>
+                <a href="{{ url_for('desafios') }}" class="btn btn-outline-primary btn-sm">Ver Todos</a>
+            </div>
+            <div class="card-body">
+                {% if desafios %}
+                    <div class="row">
+                        {% for desafio in desafios[:3] %}
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ desafio.titulo }}</h6>
+                                    <p class="card-text text-muted">{{ desafio.descricao[:50] }}...</p>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            <i class="bi bi-calendar"></i> 
+                                            Até {{ desafio.data_fim.strftime('%d/%m/%Y') }}
+                                        </small>
+                                    </p>
+                                    <button class="btn btn-outline-success btn-sm" onclick="participarDesafio({{ desafio.id }})">
+                                        Participar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">Nenhum desafio ativo. <a href="{{ url_for('novo_desafio') }}">Criar desafio</a></p>
+                {% endif %}
+            </div>
         </div>
     </div>
-    {% endfor %}
 </div>
+
+<!-- Treinos Recentes -->
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-heart-pulse"></i> Treinos Recentes
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if treinos %}
+                    <div class="row">
+                        {% for treino in treinos[:6] %}
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ treino.nome }}</h6>
+                                    <p class="card-text text-muted">{{ treino.categoria }}</p>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            <i class="bi bi-calendar"></i> 
+                                            {{ treino.data_criacao.strftime('%d/%m/%Y') }}
+                                        </small>
+                                    </p>
+                                    <a href="{{ url_for('treino', treino_id=treino.id) }}" class="btn btn-primary btn-sm">
+                                        Ver Treino
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">Nenhum treino criado. <a href="{{ url_for('novo_treino') }}">Criar primeiro treino</a></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function participarDesafio(desafioId) {
+    fetch(`/desafio/${desafioId}/participar`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Você agora está participando do desafio!');
+            location.reload();
+        } else {
+            alert('Erro: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao participar do desafio. Por favor, tente novamente.');
+    });
+}
+</script>
 {% endblock %} 
